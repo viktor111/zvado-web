@@ -18,3 +18,14 @@ export class CourseModelConstants {
     static readonly MIN_PROMO_CODE_LENGTH = 3;
     static readonly MAX_PROMO_CODE_LENGTH = 10;
 }
+
+export class VideoModelConstants {
+    static readonly MIN_NAME_LENGTH = 3;
+    static readonly MAX_NAME_LENGTH = 60;
+    static readonly MIN_DESCRIPTION_LENGTH = 3;
+    static readonly MAX_DESCRIPTION_LENGTH = 500;
+    static readonly MIN_URL_LENGTH = 3;
+    static readonly MAX_URL_LENGTH = 500;
+    static readonly MIN_DURATION = 0;
+    static readonly MAX_DURATION = 100000000;
+}

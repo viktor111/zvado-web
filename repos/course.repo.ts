@@ -1,26 +1,41 @@
-import { Course, PrismaClient } from "@prisma/client";
+import { Course, PrismaClient, Video } from "@prisma/client";
 import CourseModel from "../models/course.model";
+import VideoModel from "../models/video.model";
 
-class CourseRepo{
+class CourseRepo {
     private readonly prisma: PrismaClient;
 
-    constructor(){
+    constructor() {
         this.prisma = new PrismaClient();
     }
 
-    async getAllCourses(): Promise<Course[]>{
-        return await this.prisma.course.findMany();
+    async getAllCourses(): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany();
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
     }
 
-    async getCoursesById(id: string): Promise<Course|null>{
-        return await this.prisma.course.findUnique({
+    async getCoursesById(id: string): Promise<CourseModel | null> {
+        const course = await this.prisma.course.findUnique({
             where: {
-                id,
+                id: id,
             },
         });
+
+        if (course) {
+            return await this.getCourseWithVideos(course);
+        }
+
+        return null;
     }
 
-    async createCourse(course: CourseModel): Promise<Course>{
+    async createCourse(course: CourseModel): Promise<Course> {
         return await this.prisma.course.create({
             data: {
                 name: course.getName(),
@@ -30,12 +45,11 @@ class CourseRepo{
                 createdAt: course.getCreatedAt(),
                 updatedAt: course.getUpdatedAt(),
                 totalHours: course.getTotalHours(),
-                promoCode: course.getPromoCode(),
             },
         });
     }
 
-    async updateCourse(id: string, courseUpdated: CourseModel): Promise<Course>{
+    async updateCourse(id: string, courseUpdated: CourseModel): Promise<Course> {
         return await this.prisma.course.update({
             where: {
                 id: id,
@@ -48,12 +62,11 @@ class CourseRepo{
                 createdAt: courseUpdated.getCreatedAt(),
                 updatedAt: courseUpdated.getUpdatedAt(),
                 totalHours: courseUpdated.getTotalHours(),
-                promoCode: courseUpdated.getPromoCode(),
             },
         });
     }
 
-    async deleteCourse(id: string): Promise<Course>{
+    async deleteCourse(id: string): Promise<Course> {
         return await this.prisma.course.delete({
             where: {
                 id: id,
@@ -61,54 +74,133 @@ class CourseRepo{
         });
     }
 
-    async searchCoursesByName(name: string): Promise<Course[]>{
-        return await this.prisma.course.findMany({
+    async searchCoursesByName(name: string): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany({
             where: {
                 name: {
                     contains: name,
                 },
             },
         });
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
     }
 
-    async filterByPriceAsc(price: number): Promise<Course[]>{
-        return await this.prisma.course.findMany({
+    async filterByPriceAsc(price: number): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany({
             where: {
                 price: {
                     lte: price,
                 },
             },
         });
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
     }
 
-    async filterByPriceDesc(price: number): Promise<Course[]>{
-        return await this.prisma.course.findMany({
+    async filterByPriceDesc(price: number): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany({
             where: {
                 price: {
                     gte: price,
                 },
             },
         });
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
     }
 
-    async filterByCreatedAtAsc(date: Date): Promise<Course[]>{ 
-        return await this.prisma.course.findMany({
+    async filterByCreatedAtAsc(date: Date): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany({
             where: {
                 createdAt: {
                     lte: date,
                 },
             },
         });
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
     }
 
-    async filterByCreatedAtDesc(date: Date): Promise<Course[]>{
-        return await this.prisma.course.findMany({
+    async filterByCreatedAtDesc(date: Date): Promise<CourseModel[]> {
+        const courses = await this.prisma.course.findMany({
             where: {
                 createdAt: {
                     gte: date,
                 },
             },
         });
+
+        const coursesModel: CourseModel[] = [];
+
+        for (const course of courses) {
+            coursesModel.push(await this.getCourseWithVideos(course));
+        }
+
+        return coursesModel;
+    }
+
+    async createVideo(courseId: string, video: VideoModel): Promise<Video> {
+        return await this.prisma.video.create({
+            data: {
+                name: video.getName(),
+                description: video.getDescription(),
+                url: video.getUrl(),
+                courseId: courseId,
+            },
+        });
+    }
+
+    private async getCourseWithVideos(course: Course): Promise<CourseModel> {
+        const videos = await this.prisma.video.findMany({
+            where: {
+                courseId: course.id,
+            },
+        });
+
+        const courseModel = new CourseModel(
+            course.id,
+            course.name,
+            course.description,
+            +course.price,
+            course.image,
+            course.createdAt,
+            course.updatedAt,
+            +course.totalHours);
+
+        videos.forEach(video => {
+            courseModel.addVideo(new VideoModel(
+                video.name,
+                video.description,
+                video.url,
+                video.courseId));
+        });
+
+        return courseModel;
     }
 }
 

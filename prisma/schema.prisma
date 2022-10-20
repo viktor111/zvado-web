@@ -22,9 +22,8 @@ model Course {
   price        Decimal
   image        String
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime?      @updatedAt
+  updatedAt    DateTime       @default(now())
   totalHours   Decimal
-  promoCode    String?
 }
 
 model Video {

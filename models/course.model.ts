@@ -1,18 +1,20 @@
 import { CourseModelConstants } from "../common/constants";
 import Guard from "../common/guard";
+import VideoModel from "./video.model";
 
 class CourseModel {
     constructor(
+        id : string,
         name: string,
         description: string,
         price: number,
         image: string,
         createdAt: Date,
         updatedAt: Date,
-        totalHours: number,
-        promoCode: string) {
-        this.validate(name, description, price, image, createdAt, updatedAt, totalHours, promoCode);
+        totalHours: number) {
+        this.validate(id, name, description, price, image, createdAt, updatedAt, totalHours);
 
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -20,9 +22,9 @@ class CourseModel {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.totalHours = totalHours;
-        this.promoCode = promoCode;
     }
 
+    private id: string;
     private name: string;
     private description: string;
     private price: number;
@@ -30,7 +32,11 @@ class CourseModel {
     private createdAt: Date;
     private updatedAt: Date;
     private totalHours: number;
-    private promoCode: string;
+    private videos: VideoModel[] = [];
+
+    public getId() {
+        return this.id;
+    }
 
     public getName() {
         return this.name;
@@ -60,8 +66,9 @@ class CourseModel {
         return this.totalHours;
     }
 
-    public getPromoCode() {
-        return this.promoCode;
+    public updateId(id: string) {
+        this.validateId(id);
+        this.id = id;
     }
 
     public updateName(name: string) {
@@ -99,11 +106,6 @@ class CourseModel {
         this.totalHours = totalHours;
     }
 
-    public updatePromoCode(promoCode: string) {
-        this.validatePromoCode(promoCode);
-        this.promoCode = promoCode;
-    }
-
     private validateName(name: string) {
         Guard.againstInvalidString(name, "name");
         Guard.againstOutOfRange(
@@ -112,6 +114,14 @@ class CourseModel {
             CourseModelConstants.MAX_NAME_LENGTH,
             "name"
         );
+    }
+
+    public addVideo(video: VideoModel) {
+        this.videos.push(video);
+    }
+
+    private validateId(id: string) {
+        Guard.againstInvalidString(id, "id");
     }
 
     private validateDescription(description: string) {
@@ -156,26 +166,16 @@ class CourseModel {
         );
     }
 
-    private validatePromoCode(promoCode: string) {
-        Guard.againstInvalidString(promoCode, "promoCode");
-        Guard.againstOutOfRange(
-            promoCode,
-            CourseModelConstants.MIN_PROMO_CODE_LENGTH,
-            CourseModelConstants.MAX_PROMO_CODE_LENGTH,
-            "promoCode"
-        );
-    }
-
-
     private validate(
+        id: string,
         name: string,
         description: string,
         price: number,
         image: string,
         createdAt: Date,
         updatedAt: Date,
-        totalHours: number,
-        promoCode: string) {
+        totalHours: number) {
+        this.validateId(id);
         this.validateName(name);
         this.validateDescription(description);
         this.validatePrice(price);
@@ -183,7 +183,6 @@ class CourseModel {
         this.validateCreatedAt(createdAt);
         this.validateUpdatedAt(updatedAt);
         this.validateTotalHours(totalHours);
-        this.validatePromoCode(promoCode);
     }
 
 }
