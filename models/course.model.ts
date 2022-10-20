@@ -12,7 +12,7 @@ class CourseModel {
         createdAt: Date,
         updatedAt: Date,
         totalHours: number) {
-        this.validate(id, name, description, price, image, createdAt, updatedAt, totalHours);
+        this.validate(name, description, price, image, createdAt, updatedAt, totalHours);
 
         this.id = id;
         this.name = name;
@@ -67,7 +67,6 @@ class CourseModel {
     }
 
     public updateId(id: string) {
-        this.validateId(id);
         this.id = id;
     }
 
@@ -120,10 +119,6 @@ class CourseModel {
         this.videos.push(video);
     }
 
-    private validateId(id: string) {
-        Guard.againstInvalidString(id, "id");
-    }
-
     private validateDescription(description: string) {
         Guard.againstInvalidString(description, "description");
         Guard.againstOutOfRange(
@@ -167,7 +162,6 @@ class CourseModel {
     }
 
     private validate(
-        id: string,
         name: string,
         description: string,
         price: number,
@@ -175,7 +169,6 @@ class CourseModel {
         createdAt: Date,
         updatedAt: Date,
         totalHours: number) {
-        this.validateId(id);
         this.validateName(name);
         this.validateDescription(description);
         this.validatePrice(price);

@@ -2,19 +2,25 @@ import { VideoModelConstants } from "../common/constants";
 import Guard from "../common/guard";
 
 class VideoModel {
-    constructor(name: string, description: string, url: string, courseId: string) {
+    constructor(id: string, name: string, description: string, url: string, courseId: string) {
         this.validate(name, description, url, courseId);
 
+        this.id = id;
         this.name = name;
         this.description = description;
         this.url = url;
         this.courseId = courseId;
     }
     
+    private id: string;
     private name: string;
     private description: string;
     private url: string;
     private courseId: string;
+
+    public getId() {
+        return this.id;
+    }
 
     public getName() {
         return this.name;
@@ -30,6 +36,10 @@ class VideoModel {
 
     public getCourseId() {
         return this.courseId;
+    }
+
+    public updateId(id: string) {
+        this.id = id;
     }
 
     public updateName(name: string) {

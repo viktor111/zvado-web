@@ -90,6 +90,15 @@ class UserRepo {
 
         if (!course) throw new Error(`Course with id ${courseId} not found`);
 
+        const isPurchased = await this.prisma.ownedCourses.findFirst({
+            where: {
+                userId,
+                courseId,
+            },
+        });
+
+        if (isPurchased) throw new Error(`User already purched this course`);
+
         await this.prisma.ownedCourses.create({
             data: {
                 userId,

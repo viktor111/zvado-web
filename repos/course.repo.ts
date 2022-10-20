@@ -164,13 +164,13 @@ class CourseRepo {
         return coursesModel;
     }
 
-    async createVideo(courseId: string, video: VideoModel): Promise<Video> {
+    async createVideo(video: VideoModel): Promise<Video> {
         return await this.prisma.video.create({
             data: {
                 name: video.getName(),
                 description: video.getDescription(),
                 url: video.getUrl(),
-                courseId: courseId,
+                courseId: video.getCourseId(),
             },
         });
     }
@@ -194,6 +194,7 @@ class CourseRepo {
 
         videos.forEach(video => {
             courseModel.addVideo(new VideoModel(
+                video.id,
                 video.name,
                 video.description,
                 video.url,
