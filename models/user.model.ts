@@ -2,17 +2,19 @@ import Guard from "../common/guard";
 import { UserModelConstants } from "../common/constants";
 
 class UserModel {
-    constructor(username: string, email: string, password: string) {
+    constructor(username: string, email: string, password: string, isAdmin: boolean) {
         this.validate(username, email, password);
-        
+
         this.username = username;
         this.email = email;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     private username: string;
     private email: string;
     private password: string;
+    private isAdmin: boolean;
 
     public getUsername() {
         return this.username;
@@ -24,6 +26,10 @@ class UserModel {
 
     public getPassword() {
         return this.password;
+    }
+
+    public getIsAdmin() {
+        return this.isAdmin;
     }
 
     public updateUsername(username: string) {
@@ -39,6 +45,10 @@ class UserModel {
     public updatePassword(password: string) {
         this.validatePassword(password);
         this.password = password;
+    }
+
+    public makeAdmin() {
+        this.isAdmin = true;
     }
 
     private validateUsername(username: string) {

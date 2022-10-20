@@ -77,7 +77,26 @@ class UserRepo {
         });
 
         return courses;
-   }
+    }
+
+    async userBuyCourse(userId: string, courseId: string): Promise<Course> {
+        const course = await this.prisma.course.findUnique({
+            where: {
+                id: courseId,
+            },
+        });
+
+        if (!course) throw new Error(`Course with id ${courseId} not found`);
+
+        await this.prisma.ownedCourses.create({
+            data: {
+                userId,
+                courseId,
+            },
+        });
+
+        return course;
+    }
 }
 
 export default UserRepo;
