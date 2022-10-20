@@ -30,6 +30,7 @@ class UserRepo {
                 username: user.getUsername(),
                 email: user.getEmail(),
                 password: user.getPassword(),
+                isAdmin: user.getIsAdmin(),
             },
         });
     }
@@ -43,6 +44,7 @@ class UserRepo {
                 username: userUpdated.getUsername(),
                 email: userUpdated.getEmail(),
                 password: userUpdated.getPassword(),
+                isAdmin: userUpdated.getIsAdmin(),
             },
         });
     }
