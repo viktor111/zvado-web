@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css'
 const Home: NextPage = () => {
   return (
     <div>
-      
+        <h1 className='underline'>Home</h1>
     </div>
   )
 }
