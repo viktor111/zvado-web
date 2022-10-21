@@ -175,6 +175,40 @@ class CourseRepo {
         });
     }
 
+    async updateVideo(id: string, videoUpdated: VideoModel): Promise<Video> {
+        return await this.prisma.video.update({
+            where: {
+                id: id,
+            },
+            data: {
+                name: videoUpdated.getName(),
+                description: videoUpdated.getDescription(),
+                url: videoUpdated.getUrl(),
+                courseId: videoUpdated.getCourseId(),
+            },
+        });
+    }
+
+    async deleteVideo(id: string): Promise<Video> {
+        return await this.prisma.video.delete({
+            where: {
+                id: id,
+            },
+        });
+    }
+
+    async isOwnedByUser(courseId: string, userId: string): Promise<boolean> {
+        const isOwned = await this.prisma.ownedCourses.findFirst({
+            where: {
+                userId: userId,
+                courseId: courseId,
+            },
+        });
+
+        return isOwned ? true : false;
+    }
+
+
     private async getCourseWithVideos(course: Course): Promise<CourseModel> {
         const videos = await this.prisma.video.findMany({
             where: {
