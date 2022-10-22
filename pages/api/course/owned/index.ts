@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import CourseRepo from "../../../../repos/course.repo";
 import * as pino from "pino";
 import ApiError from "../../../../common/api.error";
 import UserRepo from '../../../../repos/user.repo';
-import jwt from "jsonwebtoken";
-import TokenDto from '../../../../dtos/token.dto';
 import tokenToDataHelper from "../../../../helpers/token.helper";
 
 const logger = pino.default();

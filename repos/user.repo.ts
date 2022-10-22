@@ -2,6 +2,7 @@ import { Course, PrismaClient, User } from "@prisma/client";
 import ApiError from "../common/api.error";
 import UserModel from "../models/user.model";
 import PasswordHelper from '../helpers/password.helper';
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 class UserRepo {
     private readonly prisma: PrismaClient;
@@ -43,15 +44,26 @@ class UserRepo {
     }
 
     async createUser(user: UserModel): Promise<User> {
-        const hashedPassword = await PasswordHelper.hash(user.getPassword());
-        return await this.prisma.user.create({
-            data: {
-                username: user.getUsername(),
-                email: user.getEmail(),
-                password: hashedPassword,
-                isAdmin: user.getIsAdmin(),
-            },
-        });
+        try{
+            const hashedPassword = await PasswordHelper.hash(user.getPassword());
+            return await this.prisma.user.create({
+                data: {
+                    username: user.getUsername(),
+                    email: user.getEmail(),
+                    password: hashedPassword,
+                    isAdmin: user.getIsAdmin(),
+                },
+            });
+        }
+        catch(err){
+            if(err instanceof PrismaClientKnownRequestError){
+                if(err.code === 'P2002'){
+                    throw new ApiError(`Email or username already in use`, 409);
+                }
+            }
+            throw new ApiError(`Internal error`, 400); 
+        }
+        
     }
 
     async updateUser(id: string, userUpdated: UserModel): Promise<User> {
