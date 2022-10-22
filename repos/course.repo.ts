@@ -209,6 +209,14 @@ class CourseRepo {
     }
 
 
+    async deleteVideoFromCourse(videoId: string): Promise<Video> {
+        return await this.prisma.video.delete({
+            where: {
+                id: videoId,
+            },
+        });
+    }
+
     private async getCourseWithVideos(course: Course): Promise<CourseModel> {
         const videos = await this.prisma.video.findMany({
             where: {

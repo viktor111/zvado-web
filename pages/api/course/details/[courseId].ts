@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import CourseRepo from "../../../../repos/course.repo";
-import * as pino from "pino";
 import ApiError from "../../../../common/api.error";
+import * as pino from "pino";
 
 const logger = pino.default();
 
