@@ -95,12 +95,13 @@ class CourseModel {
     }
 
     private validateName(name: string) {
-        Guard.againstInvalidString(name, "name");
+        Guard.againstInvalidString(name, "name", 400);
         Guard.againstOutOfRange(
             name,
             CourseModelConstants.MIN_NAME_LENGTH,
             CourseModelConstants.MAX_NAME_LENGTH,
-            "name"
+            "name",
+            400
         );
     }
 
@@ -115,36 +116,39 @@ class CourseModel {
     }
 
     private validateDescription(description: string) {
-        Guard.againstInvalidString(description, "description");
+        Guard.againstInvalidString(description, "description", 400);
         Guard.againstOutOfRange(
             description,
             CourseModelConstants.MIN_DESCRIPTION_LENGTH,
             CourseModelConstants.MAX_DESCRIPTION_LENGTH,
-            "description"
+            "description",
+            400
         );
     }
 
     private validatePrice(price: number) {
-        Guard.againstNullOrUndefined(price, "price");
+        Guard.againstNullOrUndefined(price, "price", 400);
         Guard.againstOutOfRange(
             price,
             CourseModelConstants.MIN_PRICE,
             CourseModelConstants.MAX_PRICE,
-            "price"
+            "price",
+            400
         );
     }
 
     private validateImage(image: string) {
-        Guard.againstInvalidString(image, "image");
+        Guard.againstInvalidString(image, "image", 400);
     }
 
     private validateTotalHours(totalHours: number) {
-        Guard.againstNullOrUndefined(totalHours, "totalHours");
+        Guard.againstNullOrUndefined(totalHours, "totalHours", 400);
         Guard.againstOutOfRange(
             totalHours,
             CourseModelConstants.MIN_TOTAL_HOURS,
             CourseModelConstants.MAX_TOTAL_HOURS,
-            "totalHours"
+            "totalHours",
+            400
         );
     }
 

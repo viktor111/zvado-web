@@ -1,6 +1,7 @@
 import { Course, PrismaClient, User } from "@prisma/client";
 import ApiError from "../common/api.error";
 import UserModel from "../models/user.model";
+import PasswordHelper from '../helpers/password.helper';
 
 class UserRepo {
     private readonly prisma: PrismaClient;
@@ -17,6 +18,22 @@ class UserRepo {
         });
     }
 
+    async userLogin(email: string, password: string): Promise<User> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        if (!user) throw new ApiError(`User with email ${email} not found`, 404);
+
+        const passwordMatch = await PasswordHelper.compare(password, user.password);
+
+        if (!passwordMatch) throw new ApiError(`Password is incorrect`, 400);
+
+        return user;
+    }
+
     async getUserByEmail(email: string): Promise<User | null> {
         return await this.prisma.user.findUnique({
             where: {
@@ -26,11 +43,12 @@ class UserRepo {
     }
 
     async createUser(user: UserModel): Promise<User> {
+        const hashedPassword = await PasswordHelper.hash(user.getPassword());
         return await this.prisma.user.create({
             data: {
                 username: user.getUsername(),
                 email: user.getEmail(),
-                password: user.getPassword(),
+                password: hashedPassword,
                 isAdmin: user.getIsAdmin(),
             },
         });

@@ -63,12 +63,13 @@ class VideoModel {
     }
 
     private validateName(name: string) {
-        Guard.againstInvalidString(name, "name");
+        Guard.againstInvalidString(name, "name", 400);
         Guard.againstOutOfRange(
             name,
             VideoModelConstants.MIN_NAME_LENGTH,
             VideoModelConstants.MAX_NAME_LENGTH,
-            "name"
+            "name",
+            400
         );
     }
 
@@ -77,21 +78,22 @@ class VideoModel {
     }
 
     private validateDescription(description: string) {
-        Guard.againstInvalidString(description, "description");
+        Guard.againstInvalidString(description, "description", 400);
         Guard.againstOutOfRange(
             description,
             VideoModelConstants.MIN_DESCRIPTION_LENGTH,
             VideoModelConstants.MAX_DESCRIPTION_LENGTH,
-            "description"
+            "description",
+            400
         );
     }
 
     private validateUrl(url: string) {
-        Guard.againstInvalidString(url, "url");
+        Guard.againstInvalidString(url, "url", 400);
     }
 
     private validateCourseId(courseId: string) {
-        Guard.againstInvalidString(courseId, "courseId");
+        Guard.againstInvalidString(courseId, "courseId", 400);
     }
 
     private validate(name: string, description: string, url: string, courseId: string) {

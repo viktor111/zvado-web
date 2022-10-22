@@ -62,30 +62,34 @@ class UserModel {
     }
 
     private validateUsername(username: string) {
-        Guard.againstInvalidString(username, "username");
+        Guard.againstInvalidString(username, "username", 400);
         Guard.againstOutOfRange(
             username,
             UserModelConstants.MIN_USERNAME_LENGTH,
             UserModelConstants.MAX_USERNAME_LENGTH,
-            "username"
+            "username",
+            400
         );
     }
 
     private validateEmail(email: string) {
-        Guard.againstInvalidString(email, "email");
+        Guard.againstInvalidString(email, "email", 400);
         Guard.againstRegEx(
             email,
             UserModelConstants.EMAIL_REGEX,
-            "email");
+            "email",
+            400
+        );
     }
 
     private validatePassword(password: string) {
-        Guard.againstInvalidString(password, "password");
+        Guard.againstInvalidString(password, "password", 400);
         Guard.againstOutOfRange(
             password,
             UserModelConstants.MIN_PASSWORD_LENGTH,
             UserModelConstants.MAX_PASSWORD_LENGTH,
-            "password"
+            "password",
+            400
         );
     }
 
