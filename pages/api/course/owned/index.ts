@@ -5,18 +5,14 @@ import ApiError from "../../../../common/api.error";
 import UserRepo from '../../../../repos/user.repo';
 import jwt from "jsonwebtoken";
 import TokenDto from '../../../../dtos/token.dto';
+import tokenToDataHelper from "../../../../helpers/token.helper";
 
 const logger = pino.default();
 
 const all = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1];
-        if(!token) {
-            throw new ApiError("User not logged in", 401);  
-        }
-        const authData = jwt.verify(token, 'secretkey') as TokenDto;
+        const authData = tokenToDataHelper(req);
 
-        logger.info(`Getting all courses for user ${token}`);
         const courseRepo = new UserRepo();
         const courses = await courseRepo.getUserCourses(authData.user.id);
         res.status(200).json(courses);
