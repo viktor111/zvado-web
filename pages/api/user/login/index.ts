@@ -11,7 +11,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
         const { email, password } = req.body;
         const userRepo = new UserRepo();
         var user = await userRepo.userLogin(email, password);
-        jwt.sign({ user }, 'secretkey', { expiresIn: '1h' }, (err, token) => {
+        jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' }, (err, token) => {
             res.status(200).json({ token });
         });
         return;
