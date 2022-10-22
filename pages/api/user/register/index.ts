@@ -9,13 +9,10 @@ const logger = pino.default();
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const { username, email, password } = req.body;
-        if (!username || !email || !password) {
-            throw new ApiError("Invalid entered data", 400);
-        }
-        const userRepo = new UserRepo();
         const user = new UserModel("", username, email, password, false);
-        await userRepo.createUser(user);
-        res.status(200).json({ message: "User registered" });
+        const userRepo = new UserRepo();
+        const registeredUser = await userRepo.createUser(user);
+        res.status(200).json(registeredUser);
         return;
     }
     catch (error) {
