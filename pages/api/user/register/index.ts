@@ -10,7 +10,7 @@ const logger = pino.default();
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const { username, email, password } = req.body;
-        const user = new UserModel("", username, email, password, false);
+        const user = new UserModel("", username, email, password, true);
         const userRepo = new UserRepo();
         const registeredUser = await userRepo.createUser(user);
         EmailSender.sendEmail(registeredUser.email, "Welcome to the zvado web", "You have successfully registered to zvado web");

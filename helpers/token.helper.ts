@@ -10,7 +10,7 @@ const tokenToDataHelper = (req: NextApiRequest) => {
     if(!token) {
         throw new ApiError("User not logged in", 401);  
     }
-    const authData = jwt.verify(token, 'secretkey') as TokenDto;
+    const authData = jwt.verify(token, process.env.JWT_SECRET_KEY) as TokenDto;
     return authData;
 }
 

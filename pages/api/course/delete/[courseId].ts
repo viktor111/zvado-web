@@ -1,12 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import * as pino from "pino";
 import ApiError from "../../../../common/api.error";
+import tokenToDataHelper from "../../../../helpers/token.helper";
 import CourseRepo from "../../../../repos/course.repo";
 
 const logger = pino.default();
 
 const deleteHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
+        const authData = tokenToDataHelper(req);
+        if(!authData.user.isAdmin) {
+            throw new ApiError("User is not admin", 403);
+        }
         const { courseId } = req.query;
         if(!courseId) {
             throw new ApiError("Course id not provided", 404);

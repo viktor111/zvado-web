@@ -1,10 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ApiError } from "next/dist/server/api-utils";
 import CourseRepo from "../../../../repos/course.repo";
 import CourseModel from '../../../../models/course.model';
+import tokenToDataHelper from "../../../../helpers/token.helper";
+import ApiError from "../../../../common/api.error";
 
 const create = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
+        const authData = tokenToDataHelper(req);
+        if(!authData.user.isAdmin) {
+            throw new ApiError("User is not admin", 403);
+        }
         const { name, description, price, image, totalHours } = req.body;
         const course = new CourseModel("",name, description, price, image, totalHours);
         const courseRepo = new CourseRepo();

@@ -3,19 +3,19 @@ import UserRepo from "../../../../repos/user.repo";
 import * as pino from "pino";
 import validateIds from "../../../../common/validateIds";
 import ApiError from "../../../../common/api.error";
+import tokenToDataHelper from "../../../../helpers/token.helper";
 
 const logger = pino.default();
 
 const buy = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-        const { ids } = req.query;
-        const validIds = validateIds(ids, 2);
-        const userId = validIds[0];
-        const courseId = validIds[1];
+        const authData = tokenToDataHelper(req);
+        const userId = authData.user.id;
+        const { courseId } = req.query;
         logger.info(`User ${userId} is buying course ${courseId}`);
 
         const useRepo = new UserRepo();
-        const courses = await useRepo.userBuyCourse(userId, courseId);
+        const courses = await useRepo.userBuyCourse(userId, courseId as string);
         logger.info(`User ${userId} bought course ${courseId}`);
         res.status(200).json(courses);
         return;
