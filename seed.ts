@@ -13,9 +13,9 @@ async function main() {
     const user2 = new UserModel("", "ErolPetrol", "draganovop@gmail.com", "123456", false);
     const user3 = new UserModel("", "YovkaKamayovka", "zhenya@gbg.bg", "123456", false);
 
-    const course1 = new CourseModel("", "React course", "Course about react with typescript", 10.5, "testImage1", new Date(), new Date(), 11.5);
-    const course2 = new CourseModel("", "C# course", "Course about c#", 2.2, "testImage2", new Date(), new Date(), 22);
-    const course3 = new CourseModel("", "Java course", "Course about java", 30.5, "testImage3", new Date(), new Date(), 33);
+    const course1 = new CourseModel("", "React course", "Course about react with typescript", 10.5, "testImage1", 11.5);
+    const course2 = new CourseModel("", "C# course", "Course about c#", 2.2, "testImage2", 22);
+    const course3 = new CourseModel("", "Java course", "Course about java", 30.5, "testImage3", 33);
 
     await userRepo.createUser(admin);
     await userRepo.createUser(user1);
