@@ -4,23 +4,18 @@ import VideoModel from "./video.model";
 
 class CourseModel {
     constructor(
-        id : string,
+        id: string,
         name: string,
         description: string,
         price: number,
         image: string,
-        createdAt: Date,
-        updatedAt: Date,
         totalHours: number) {
-        this.validate(name, description, price, image, createdAt, updatedAt, totalHours);
-
+        this.validate(name, description, price, image, totalHours);
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.image = image;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.totalHours = totalHours;
     }
 
@@ -29,8 +24,8 @@ class CourseModel {
     private description: string;
     private price: number;
     private image: string;
-    private createdAt: Date;
-    private updatedAt: Date;
+    private createdAt = new Date();
+    private updatedAt = new Date();
     private totalHours: number;
     private videos: VideoModel[] = [];
 
@@ -66,6 +61,10 @@ class CourseModel {
         return this.totalHours;
     }
 
+    public getVideos() {
+        return this.videos;
+    }
+
     public updateId(id: string) {
         this.id = id;
     }
@@ -90,16 +89,6 @@ class CourseModel {
         this.image = image;
     }
 
-    public updateCreatedAt(createdAt: Date) {
-        this.validateCreatedAt(createdAt);
-        this.createdAt = createdAt;
-    }
-
-    public updateUpdatedAt(updatedAt: Date) {
-        this.validateUpdatedAt(updatedAt);
-        this.updatedAt = updatedAt;
-    }
-
     public updateTotalHours(totalHours: number) {
         this.validateTotalHours(totalHours);
         this.totalHours = totalHours;
@@ -117,6 +106,12 @@ class CourseModel {
 
     public addVideo(video: VideoModel) {
         this.videos.push(video);
+    }
+
+    public removeVideosUrls() {
+        this.videos.forEach(video => {
+            video.removeUrl();
+        });
     }
 
     private validateDescription(description: string) {
@@ -143,14 +138,6 @@ class CourseModel {
         Guard.againstInvalidString(image, "image");
     }
 
-    private validateCreatedAt(createdAt: Date) {
-        Guard.againstNullOrUndefined(createdAt, "createdAt");
-    }
-
-    private validateUpdatedAt(updatedAt: Date) {
-        Guard.againstNullOrUndefined(updatedAt, "updatedAt");
-    }
-
     private validateTotalHours(totalHours: number) {
         Guard.againstNullOrUndefined(totalHours, "totalHours");
         Guard.againstOutOfRange(
@@ -166,15 +153,11 @@ class CourseModel {
         description: string,
         price: number,
         image: string,
-        createdAt: Date,
-        updatedAt: Date,
         totalHours: number) {
         this.validateName(name);
         this.validateDescription(description);
         this.validatePrice(price);
         this.validateImage(image);
-        this.validateCreatedAt(createdAt);
-        this.validateUpdatedAt(updatedAt);
         this.validateTotalHours(totalHours);
     }
 

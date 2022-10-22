@@ -1,4 +1,5 @@
 import { Course, PrismaClient, User } from "@prisma/client";
+import ApiError from "../common/api.error";
 import UserModel from "../models/user.model";
 
 class UserRepo {
@@ -88,7 +89,7 @@ class UserRepo {
             },
         });
 
-        if (!course) throw new Error(`Course with id ${courseId} not found`);
+        if (!course) throw new ApiError(`Course with id ${courseId} not found`, 404);
 
         const isPurchased = await this.prisma.ownedCourses.findFirst({
             where: {
@@ -97,7 +98,7 @@ class UserRepo {
             },
         });
 
-        if (isPurchased) throw new Error(`User already purched this course`);
+        if (isPurchased) throw new ApiError(`User already purched this course`, 400);
 
         await this.prisma.ownedCourses.create({
             data: {

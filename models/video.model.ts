@@ -72,6 +72,10 @@ class VideoModel {
         );
     }
 
+    public removeUrl() {
+        this.url = "";
+    }
+
     private validateDescription(description: string) {
         Guard.againstInvalidString(description, "description");
         Guard.againstOutOfRange(

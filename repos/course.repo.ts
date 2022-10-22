@@ -198,14 +198,14 @@ class CourseRepo {
     }
 
     async isOwnedByUser(courseId: string, userId: string): Promise<boolean> {
-        const isOwned = await this.prisma.ownedCourses.findFirst({
+        const isOwned = await this.prisma.ownedCourses.count({
             where: {
                 userId: userId,
                 courseId: courseId,
             },
         });
 
-        return isOwned ? true : false;
+        return isOwned > 0;
     }
 
 
@@ -222,8 +222,6 @@ class CourseRepo {
             course.description,
             +course.price,
             course.image,
-            course.createdAt,
-            course.updatedAt,
             +course.totalHours);
 
         videos.forEach(video => {
